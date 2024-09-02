@@ -12,7 +12,7 @@ function CurrentTime() {
   }, []);
 
   return (
-    <div className="current-time">
+    <div> 
       {currentTime.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",

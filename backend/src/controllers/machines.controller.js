@@ -58,8 +58,13 @@ module.exports = {
 
   create: async function (req, res) {
     var tmpData = {
-      code: req.body.code,
       name: req.body.name,
+      branch_id: req.body.branch_id,
+      machine_type_id: req.body.machine_type_id,
+   
+      start: req.body.start,
+      end: req.body.end,
+      status: req.body.status,
     };
 
     await Machines.create(tmpData)
@@ -97,11 +102,17 @@ module.exports = {
   },
 
   update: async function (req, res) {
-    console.log("Todo " + req.params.id + " updated");
+
     const id = req.params.id;
     var tmpData = {
-      code: req.body.code,
       name: req.body.name,
+      branch_id: req.body.branch_id,
+      machine_type_id: req.body.machine_type_id,
+   
+      start: req.body.start,
+      end: req.body.end,
+      status: req.body.status,
+
     };
 
     await Machines.update(tmpData, {

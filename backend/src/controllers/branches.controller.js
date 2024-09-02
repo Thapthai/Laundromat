@@ -58,8 +58,10 @@ module.exports = {
 
   create: async function (req, res) {
     var tmpData = {
-      code: req.body.code,
       name: req.body.name,
+      location: req.body.location,
+      GPS: req.body.GPS,
+      status: req.body.status,
     };
 
     await Branches.create(tmpData)
@@ -100,8 +102,11 @@ module.exports = {
     console.log("Todo " + req.params.id + " updated");
     const id = req.params.id;
     var tmpData = {
-      code: req.body.code,
       name: req.body.name,
+      location: req.body.location,
+      GPS: req.body.GPS,
+      status: req.body.status,
+
     };
 
     await Branches.update(tmpData, {

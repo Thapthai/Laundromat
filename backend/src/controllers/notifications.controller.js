@@ -53,8 +53,11 @@ module.exports = {
 
   create: async function (req, res) {
     var tmpData = {
-      code: req.body.code,
-      name: req.body.name,
+      machine_id: req.body.machine_id,
+      user_id: req.body.user_id,
+      record_id: req.body.record_id,
+      message: req.body.message,
+      status: req.body.status,
     };
 
     await Notifications.create(tmpData)
@@ -95,8 +98,11 @@ module.exports = {
     console.log("Todo " + req.params.id + " updated");
     const id = req.params.id;
     var tmpData = {
-      code: req.body.code,
-      name: req.body.name,
+      machine_id: req.body.machine_id,
+      user_id: req.body.user_id,
+      record_id: req.body.record_id,
+      message: req.body.message,
+      status: req.body.status,
     };
 
     await Notifications.update(tmpData, {

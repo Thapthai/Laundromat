@@ -14,14 +14,14 @@ app.group(`/${apiName}/`, (router) => {
     router.get("/", (req, res) => {
         res.json({ message: `RESTful API version ${version} For Test` });
     });
-    router.use("/", require("./src/routes/users.route"));
     router.use("/", require("./src/routes/branches.route"));
     router.use("/", require("./src/routes/machines.route"));
     router.use("/", require("./src/routes/records.route"));
-
     router.use("/", require("./src/routes/notifications.route"));
-
+    router.use("/", require("./src/routes/lineNotifications.route"));
 });
+
+ 
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -1,80 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import querystring from "querystring"; // Install querystring if needed
 
-const Countdown = ({ startTime, targetTime }) => {
-    const [timeLeft, setTimeLeft] = useState(getTimeLeft(startTime, targetTime));
+function Countdown({ startTime, targetTime, machineId }) {
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft(startTime, targetTime));
+  const [notificationSent, setNotificationSent] = useState(false);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const newTimeLeft = getTimeLeft(startTime, targetTime);
-            setTimeLeft(newTimeLeft);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newTimeLeft = getTimeLeft(startTime, targetTime);
+      setTimeLeft(newTimeLeft);
 
-            // ส่งการแจ้งเตือนเมื่อเวลาที่เหลืออยู่เท่ากับ 1 นาที
-            if (newTimeLeft.hours === 0 && newTimeLeft.minutes === 1 && newTimeLeft.seconds === 0) {
-                sendNotification();
-            }
-        }, 1000);
+      if (
+        newTimeLeft.hours === 0 &&
+        newTimeLeft.minutes === 1 &&
+        newTimeLeft.seconds === 0 &&
+        !notificationSent
+      ) {
+        // sendLineNotification();
+        setNotificationSent(true); // Ensure notification is sent only once
+      }
 
-        // ทำความสะอาด interval เมื่อคอมโพเนนต์ถูกทำลาย
-        return () => clearInterval(interval);
-    }, [startTime, targetTime]);
+      if (
+        newTimeLeft.hours === 0 &&
+        newTimeLeft.minutes === 0 &&
+        newTimeLeft.seconds === 0
+      ) {
+        updateMachine();
+        clearInterval(interval); // Stop the interval when the countdown is complete
+      }
+    }, 1000);
 
-    function getTimeLeft(startTime, targetTime) {
-        const now = new Date();
-        const [startHour, startMinute, startSecond] = startTime.split(':').map(Number);
-        const [targetHour, targetMinute, targetSecond] = targetTime.split(':').map(Number);
-        
-        // สร้างวันที่และเวลาเริ่มต้น
-        const startDate = new Date(now);
-        startDate.setHours(startHour, startMinute, startSecond, 0);
-        
-        // สร้างวันที่และเวลาสิ้นสุด
-        const targetDate = new Date(now);
-        targetDate.setHours(targetHour, targetMinute, targetSecond, 0);
+    return () => clearInterval(interval);
+  }, [startTime, targetTime, notificationSent]);
 
-        // ถ้าปัจจุบันก่อนเวลาเริ่มต้น ให้ตั้งเวลาเริ่มต้นไปที่วันนี้
-        if (now.getTime() < startDate.getTime()) {
-            return { hours: 0, minutes: 0, seconds: 0, isComplete: false };
-        }
+  function getTimeLeft(startTime, targetTime) {
+    const now = new Date();
+    const [startHour, startMinute, startSecond] = startTime
+      .split(":")
+      .map(Number);
+    const [targetHour, targetMinute, targetSecond] = targetTime
+      .split(":")
+      .map(Number);
 
-        // ถ้าปัจจุบันเกินเวลาสิ้นสุดแล้ว ให้ตั้งเป้าไปที่วันถัดไป
-        if (now.getTime() > targetDate.getTime()) {
-            return { hours: 0, minutes: 0, seconds: 0, isComplete: true };
-        }
+    const startDate = new Date(now);
+    startDate.setHours(startHour, startMinute, startSecond, 0);
 
-        // คำนวณเวลาที่เหลือ
-        const distance = targetDate.getTime() - now.getTime();
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const targetDate = new Date(now);
+    targetDate.setHours(targetHour, targetMinute, targetSecond, 0);
 
-        return { hours, minutes, seconds, isComplete: false };
+    if (now.getTime() < startDate.getTime()) {
+      return { hours: 0, minutes: 0, seconds: 0, isComplete: false };
     }
 
-    function sendNotification() {
-        
-        fetch('http://localhost:3000/laundromat/notifications', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: 'เวลาที่เหลืออีก 1 นาที!',
-            }),
-        })
-        .then(response => response.json())
-        .then(data => console.log('Success:', data))
-        .catch((error) => console.error('Error:', error));
+    if (now.getTime() > targetDate.getTime()) {
+      return { hours: 0, minutes: 0, seconds: 0, isComplete: true };
     }
 
-    if (timeLeft.isComplete) {
-        return <div>เสร็จเรียบร้อย</div>;
-    }
-
-    return (
-        <div>
-            {timeLeft.hours} ชั่วโมง {timeLeft.minutes} นาที {timeLeft.seconds} วินาที
-        </div>
+    const distance = targetDate.getTime() - now.getTime();
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
     );
-};
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    return { hours, minutes, seconds, isComplete: false };
+  }
+
+  // function sendLineNotification() {}
+
+  function updateMachine() {
+    fetch(`http://localhost:3000/laundromat/machines/${machineId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "done",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Machine updated:", data))
+      .catch((error) => console.error("Error updating machine:", error));
+  }
+
+  if (timeLeft.isComplete) {
+    return <th>เสร็จเรียบร้อย</th>;
+  }
+
+  return (
+    <>
+      <th>
+        {timeLeft.hours} ชั่วโมง {timeLeft.minutes} นาที {timeLeft.seconds}{" "}
+        วินาที
+      </th>
+    </>
+  );
+}
 
 export default Countdown;
