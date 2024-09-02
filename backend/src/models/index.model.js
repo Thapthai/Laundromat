@@ -33,9 +33,10 @@ db.sequelize = sequelize;
 
 db.branches = require("./branches.model")(sequelize, Sequelize);
 db.machines = require("./machines.model")(sequelize, Sequelize);
-db.machineType = require("./machineType.model")(sequelize, Sequelize);
+db.machineModes = require("./machineMode.model")(sequelize, Sequelize);
 db.notifications = require("./notifications.model")(sequelize, Sequelize);
 db.records = require("./records.model")(sequelize, Sequelize);
+
 db.users = require("./users.model")(sequelize, Sequelize);
 
 

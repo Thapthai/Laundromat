@@ -3,7 +3,6 @@ module.exports = function (sequelize, Sequelize) {
     const Machines = sequelize.define(
         "machines",
         {
-
             name: {
                 type: DataTypes.STRING,
             },
@@ -12,6 +11,12 @@ module.exports = function (sequelize, Sequelize) {
             },
             machine_type_id: {
                 type: DataTypes.INTEGER,
+            },
+            start: {
+                type: DataTypes.TIME,
+            },
+            end: {
+                type: DataTypes.TIME,
             },
             status: {
                 type: DataTypes.STRING,

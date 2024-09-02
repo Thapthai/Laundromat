@@ -5,6 +5,8 @@ const Machines = db.machines;
 const Op = db.Sequelize.Op;
 const func = db.Sequelize;
 
+Machines.belongsTo(db.branches, { foreignKey: 'branch_id' });
+
 module.exports = {
   findall: async function (req, res) {
     const name = req.query.code;
@@ -19,6 +21,9 @@ module.exports = {
       limit: parseInt(lim, 10),
       offset: parseInt(offs, 0),
       order: [["id", "DESC"]],
+      include: [{
+        model: db.branches
+      }]
     })
       .then((data) => {
         res.status(200);

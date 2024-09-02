@@ -10,7 +10,6 @@ app.use(express.json());
 const apiName = process.env.API_NAME || "laundromat";
 const version = "1.0.0";  // กำหนดค่าเวอร์ชันของ API
 
-
 app.group(`/${apiName}/`, (router) => {
     router.get("/", (req, res) => {
         res.json({ message: `RESTful API version ${version} For Test` });
@@ -18,10 +17,9 @@ app.group(`/${apiName}/`, (router) => {
     router.use("/", require("./src/routes/users.route"));
     router.use("/", require("./src/routes/branches.route"));
     router.use("/", require("./src/routes/machines.route"));
-    router.use("/", require("./src/routes/machineType.route"));
-    router.use("/", require("./src/routes/notifications.route"));
     router.use("/", require("./src/routes/records.route"));
 
+    router.use("/", require("./src/routes/notifications.route"));
 
 });
 

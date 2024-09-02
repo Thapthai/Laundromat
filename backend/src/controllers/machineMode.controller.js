@@ -1,9 +1,11 @@
 "use strict";
 
 const db = require("../models/index.model");
-const MachineType = db.machineType;
+const MachineMode = db.machineModes;
 const Op = db.Sequelize.Op;
 const func = db.Sequelize;
+
+
 
 module.exports = {
   findall: async function (req, res) {
@@ -14,7 +16,7 @@ module.exports = {
     var lim = limit ? limit : 10;
     var offs = page ? (page - 1) * lim : 0;
 
-    await MachineType.findAll({
+    await MachineMode.findAll({
       where: condition,
       limit: parseInt(lim, 10),
       offset: parseInt(offs, 0),
@@ -37,7 +39,7 @@ module.exports = {
     console.log("Viewing " + req.params.id);
     const id = req.params.id;
 
-    await MachineType.findByPk(id)
+    await MachineMode.findByPk(id)
       .then((data) => {
         res.status(200);
         res.send(data);
@@ -57,7 +59,7 @@ module.exports = {
       name: req.body.name,
     };
 
-    await MachineType.create(tmpData)
+    await MachineMode.create(tmpData)
       .then((data) => {
         res.status(200);
         res.send({ status: "created" });
@@ -75,7 +77,7 @@ module.exports = {
     console.log("Delete " + req.params.id);
     const id = req.params.id;
 
-    await MachineType.destroy({
+    await MachineMode.destroy({
       where: { id: id },
     })
       .then(() => {
@@ -99,7 +101,7 @@ module.exports = {
       name: req.body.name,
     };
 
-    await MachineType.update(tmpData, {
+    await MachineMode.update(tmpData, {
       where: { id: id },
     })
       .then((data) => {

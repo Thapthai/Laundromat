@@ -1,9 +1,13 @@
 module.exports = function (sequelize, Sequelize) {
     const { DataTypes } = require("sequelize");
-    const MachineType = sequelize.define(
-        "machine_type",
+    const MachineMode = sequelize.define(
+        "machine_modes",
         {
             name: {
+                type: DataTypes.STRING,
+            },
+ 
+            time: {
                 type: DataTypes.STRING,
             },
             status: {
@@ -15,7 +19,7 @@ module.exports = function (sequelize, Sequelize) {
             updatedAt: "updated_at",
         }
     );
-    MachineType.sync();
+    MachineMode.sync();
 
-    return MachineType;
+    return MachineMode;
 };
