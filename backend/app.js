@@ -16,8 +16,6 @@ app.group(`/${apiName}/`, (router) => {
     });
     router.use("/", require("./src/routes/branches.route"));
     router.use("/", require("./src/routes/machines.route"));
-    router.use("/", require("./src/routes/records.route"));
-    router.use("/", require("./src/routes/notifications.route"));
     router.use("/", require("./src/routes/lineNotifications.route"));
 });
 

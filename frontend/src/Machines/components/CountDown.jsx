@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
- 
+import { useState, useEffect } from "react";
 
 function Countdown({ startTime, targetTime, machineId }) {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft(startTime, targetTime));
-  const [notificationSent, setNotificationSent] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -14,11 +11,9 @@ function Countdown({ startTime, targetTime, machineId }) {
       if (
         newTimeLeft.hours === 0 &&
         newTimeLeft.minutes === 1 &&
-        newTimeLeft.seconds === 0 &&
-        !notificationSent
+        newTimeLeft.seconds === 0
       ) {
         sendLineNotification();
-        setNotificationSent(true); // Ensure notification is sent only once
       }
 
       if (
@@ -32,7 +27,7 @@ function Countdown({ startTime, targetTime, machineId }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [startTime, targetTime, notificationSent]);
+  }, [startTime, targetTime]);
 
   function getTimeLeft(startTime, targetTime) {
     const now = new Date();

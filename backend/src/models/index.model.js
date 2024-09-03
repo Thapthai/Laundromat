@@ -33,7 +33,5 @@ db.sequelize = sequelize;
 
 db.branches = require("./branches.model")(sequelize, Sequelize);
 db.machines = require("./machines.model")(sequelize, Sequelize);
-db.notifications = require("./notifications.model")(sequelize, Sequelize);
-db.records = require("./records.model")(sequelize, Sequelize);
 
 module.exports = db;

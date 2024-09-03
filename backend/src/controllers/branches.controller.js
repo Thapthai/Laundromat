@@ -9,15 +9,25 @@ Branches.hasMany(db.machines, { foreignKey: 'branch_id' });
 
 module.exports = {
   findall: async function (req, res) {
-    const name = req.query.code;
+    const name = req.query.name;
+    const location = req.query.location;
+    const GPS = req.query.GPS;
+    const status = req.query.status;
+
     const limit = req.query.limit;
     const page = req.query.page;
-    var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+
+    var conditions = {};
+    if (name) conditions.name = { [Op.like]: `%${name}%` };
+    if (location) conditions.location = { [Op.like]: `%${location}%` };
+    if (GPS) conditions.GPS = { [Op.like]: `%${GPS}%` };
+    if (status) conditions.status = status;
+
     var lim = limit ? limit : 10;
     var offs = page ? (page - 1) * lim : 0;
 
     await Branches.findAll({
-      where: condition,
+      where: conditions,
       limit: parseInt(lim, 10),
       offset: parseInt(offs, 0),
       order: [["id", "DESC"]],
@@ -33,10 +43,11 @@ module.exports = {
         res.status(500);
         res.send({
           message:
-            err.message || "Some error occurred while retrieving tutorials.",
+            err.message || "Some error occurred while retrieving branches.",
         });
       });
   },
+ 
 
   findone: async function (req, res) {
     console.log("Viewing " + req.params.id);
@@ -51,7 +62,7 @@ module.exports = {
         res.status(500);
         res.send({
           message:
-            err.message || "Some error occurred while retrieving tutorials.",
+            err.message || "Some error occurred while retrieving the branch.",
         });
       });
   },
@@ -73,7 +84,7 @@ module.exports = {
         res.status(500);
         res.send({
           message:
-            err.message || "Some error occurred while retrieving tutorials.",
+            err.message || "Some error occurred while creating the branch.",
         });
       });
   },
@@ -93,7 +104,7 @@ module.exports = {
         res.status(500);
         res.send({
           message:
-            err.message || "Some error occurred while retrieving tutorials.",
+            err.message || "Some error occurred while deleting the branch.",
         });
       });
   },
