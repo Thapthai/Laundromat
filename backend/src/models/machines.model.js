@@ -9,9 +9,6 @@ module.exports = function (sequelize, Sequelize) {
             branch_id: {
                 type: DataTypes.INTEGER,
             },
-            machine_type_id: {
-                type: DataTypes.INTEGER,
-            },
             start: {
                 type: DataTypes.TIME,
             },

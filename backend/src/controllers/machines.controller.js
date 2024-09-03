@@ -63,9 +63,7 @@ module.exports = {
   create: async function (req, res) {
     var tmpData = {
       name: req.body.name,
-      branch_id: req.body.branch_id,
-      machine_type_id: req.body.machine_type_id,
-   
+      branch_id: req.body.branch_id,  
       start: req.body.start,
       end: req.body.end,
       status: req.body.status,
@@ -111,8 +109,6 @@ module.exports = {
     var tmpData = {
       name: req.body.name,
       branch_id: req.body.branch_id,
-      machine_type_id: req.body.machine_type_id,
-   
       start: req.body.start,
       end: req.body.end,
       status: req.body.status,
