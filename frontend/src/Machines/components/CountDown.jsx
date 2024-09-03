@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import querystring from "querystring"; // Install querystring if needed
+ 
 
 function Countdown({ startTime, targetTime, machineId }) {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft(startTime, targetTime));
@@ -17,7 +17,7 @@ function Countdown({ startTime, targetTime, machineId }) {
         newTimeLeft.seconds === 0 &&
         !notificationSent
       ) {
-        // sendLineNotification();
+        sendLineNotification();
         setNotificationSent(true); // Ensure notification is sent only once
       }
 
@@ -67,7 +67,20 @@ function Countdown({ startTime, targetTime, machineId }) {
     return { hours, minutes, seconds, isComplete: false };
   }
 
-  // function sendLineNotification() {}
+  function sendLineNotification() {
+    fetch(`http://localhost:3000/laundromat/notify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: "1 minute remaining!",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Send Line Notify:", data))
+      .catch((error) => console.error("Error updating Line Notify:", error));
+  }
 
   function updateMachine() {
     fetch(`http://localhost:3000/laundromat/machines/${machineId}`, {
@@ -91,8 +104,7 @@ function Countdown({ startTime, targetTime, machineId }) {
   return (
     <>
       <th>
-        {timeLeft.hours} ชั่วโมง {timeLeft.minutes} นาที {timeLeft.seconds}{" "}
-        วินาที
+        {timeLeft.hours} hr {timeLeft.minutes} min {timeLeft.seconds} sec
       </th>
     </>
   );

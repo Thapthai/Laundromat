@@ -1,22 +1,30 @@
 const axios = require('axios');
-const querystring = require('querystring');
+const qs = require('qs');
+require("dotenv").config();
 
-exports.notifyLine = async (message) => {
-    const accessToken = 'C4sV5dee5VvTHgAV7qBh61Xf8tBVdYKCoFUlQo4iZhS';
+async function notifyLine(message) {
+    let data = qs.stringify({
+        'message': message
+    });
+    const accessToken = process.env.LINE_TOKEN;
+
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://notify-api.line.me/api/notify',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${accessToken}`
+        },
+        data: data
+    };
 
     try {
-        const response = await axios({
-            method: 'POST',
-            url: 'https://notify-api.line.me/api/notify',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': `Bearer ${accessToken}`,
-            },
-            data: querystring.stringify({ message })
-        });
-        console.log('Success:', response.data);
+        const response = await axios.request(config);
+        return response.data;
     } catch (error) {
-        console.error('Error:', error.response ? error.response.data : error.message);
+        throw new Error(error.response ? error.response.data.message : error.message);
     }
-};
- 
+}
+
+module.exports = { notifyLine };

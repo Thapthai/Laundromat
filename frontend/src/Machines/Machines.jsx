@@ -92,7 +92,7 @@ function Machines() {
 
   return (
     <div className="container mt-4">
-      เวลา <CurrentTime />
+      Time <CurrentTime />
       {machineTypes.map((machineType) => (
         <div className="card mt-3" key={machineType.id}>
           <div className="card-header">
@@ -161,18 +161,18 @@ function Machines() {
                             className="btn btn-primary w-100"
                             onClick={() => handleStart(machine.id)}
                           >
-                            เริ่ม
+                            Start
                           </button>
                         ) : machine.status === "done" ? (
                           <button
                             className="btn btn-success w-100"
                             onClick={() => handleReset(machine.id)}
                           >
-                            เก็บ
+                            Finish
                           </button>
                         ) : (
                           <button className="btn btn-warning w-100" disabled>
-                            กำลังใช้งาน
+                            Working
                           </button>
                         )}
                       </div>
